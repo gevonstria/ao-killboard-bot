@@ -7,8 +7,9 @@ import sqlite3
 
 GUILD_ID = "0rk05r3DRkOSqAV5m_IUWQ"
 GUILD_NAME = "KNIGHTS OF TOMO"
-KILLBOARD_URL = "https://gameinfo.albiononline.com/api/gameinfo/guilds/" +GUILD_ID +"/top?limit=5&range=week"
+KILLBOARD_URL = "https://gameinfo.albiononline.com/api/gameinfo/guilds/" +GUILD_ID +"/top?limit=100&range=week"
 DISCORD_WEBHOOKS = "https://discordapp.com/api/webhooks/704237220038705162/XtsJndaxurQyC1YPuJQY8jMlOKkcFEMJ6qv2MQ1jYrEmFMwS1KrxgaoiaaiYjbzLzvNS"
+KILLBOARD_LINK = "https://albiononline.com/en/killboard/kill/"
 exitFlag = 0
 date_filter = datetime.now().strftime("%Y-%m-%d")
 
@@ -54,6 +55,10 @@ def send_to_discord(data):
                 }
                 ]
                 },{
+                    "title": "Killboard Link",
+                    "url": KILLBOARD_LINK +str(data["EventId"])
+                },
+                {
                 "timestamp": data["TimeStamp"]
             }
         ]
@@ -71,14 +76,16 @@ def get_killboard_data(threadName, delay, counter):
     while counter:
         if exitFlag:
             threadName.exit()
-        time.sleep(delay)
 
         print("Checking....")
         try:
-            killboard_data = requests.get(KILLBOARD_URL).json()
+            r = requests.get(KILLBOARD_URL)
+            print(r.status_code)
+            killboard_data = r.json()
         except:
             print("Error!")
             killboard_data = {}
+
         for data in killboard_data:
             if data["Type"] == "KILL":
                 conn = sqlite3.connect('kills_db')
