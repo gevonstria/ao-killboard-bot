@@ -21,18 +21,18 @@ class myThread (threading.Thread):
 
    def run(self):
       print ("Starting " + self.name)
-      print_time(self.name, self.counter, 5)
+      get_killboard_data(self.name, self.counter, 5)
       print ("Exiting " + self.name)
 
 def send_to_discord(data):
     payload = {
-        "content": data["Killer"]["Name"] +" killed " +data["Victim"]["Name"]
+        "content": data["Killer"]["Name"] +" killed " +data["Victim"]["Name"] +" [" +data["GuildName"] + "]"
     }
     time.sleep(5)
     r = requests.post(DISCORD_WEBHOOKS, json=payload)
     print(r.status_code)
 
-def print_time(threadName, delay, counter):
+def get_killboard_data(threadName, delay, counter):
     while counter:
         if exitFlag:
             threadName.exit()
