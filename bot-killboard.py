@@ -111,7 +111,7 @@ def get_killboard_data(threadName, delay, counter):
         counter += 1
 
 # Create new threads
-thread1 = myThread(1, "Thread-1", 5)
+thread1 = myThread(1, "Thread-1", 60)
 
 
 # Start new Threads
