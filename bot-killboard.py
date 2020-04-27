@@ -21,7 +21,7 @@ class myThread (threading.Thread):
 
    def run(self):
       print ("Starting " + self.name)
-      get_killboard_data(self.name, self.counter, 5)
+      get_killboard_data(self.name, self.counter, 1)
       print ("Exiting " + self.name)
 
 def send_to_discord(data):
@@ -52,7 +52,7 @@ def get_killboard_data(threadName, delay, counter):
                 # Check if exists
                 cur.execute("SELECT id FROM events WHERE id='" +str(data["EventId"]) +"'")
                 rows = cur.fetchall()
-                if len(rows) > 1:
+                if len(rows) >= 1:
                     print("Exist")
                     continue
                 else:
@@ -74,8 +74,8 @@ def get_killboard_data(threadName, delay, counter):
 
         print("Checks Done!")
         time.sleep(delay)
-
-    counter -= 1
+        print("Run count: " +str(counter))
+        counter += 1
 
 # Create new threads
 thread1 = myThread(1, "Thread-1", 60)
