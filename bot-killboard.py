@@ -64,6 +64,7 @@ def send_to_discord(data):
         ]
     time.sleep(5)
     payload = {
+        "content": "Another one bites the dust"
         "embeds": embeds
     }
     print(payload)
