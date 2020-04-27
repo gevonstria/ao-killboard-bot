@@ -6,7 +6,7 @@ import sqlite3
 
 GUILD_ID = "0rk05r3DRkOSqAV5m_IUWQ"
 GUILD_NAME = "KNIGHTS OF TOMO"
-KILLBOARD_URL = "https://gameinfo.albiononline.com/api/gameinfo/guilds/" +GUILD_ID +"/top?limit=50&range=day"
+KILLBOARD_URL = "https://gameinfo.albiononline.com/api/gameinfo/guilds/" +GUILD_ID +"/top?limit=50&range=week"
 DISCORD_WEBHOOKS = "https://discordapp.com/api/webhooks/704237220038705162/XtsJndaxurQyC1YPuJQY8jMlOKkcFEMJ6qv2MQ1jYrEmFMwS1KrxgaoiaaiYjbzLzvNS"
 exitFlag = 0
 date_filter = datetime.now().strftime("%Y-%m-%d")
