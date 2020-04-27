@@ -86,7 +86,7 @@ def get_killboard_data(threadName, delay, counter):
                 # Check if exists
                 cur.execute("SELECT id FROM events WHERE id='" +str(data["EventId"]) +"'")
                 rows = cur.fetchall()
-                if len(rows) >= 10:
+                if len(rows) >= 1:
                     continue
                 else:
                     print("-----------------------------")
