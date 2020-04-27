@@ -26,19 +26,25 @@ class myThread (threading.Thread):
 
 def send_to_discord(data):
     payload = {
-        "content": data["Killer"]["Name"] +" killed " +data["Victim"]["Name"] +" [" +data["GuildName"] + "]"
+        "content": data["Killer"]["Name"] +" killed " +data["Victim"]["Name"] +" [" +data["Victim"]["GuildName"] + "]"
     }
     time.sleep(5)
     r = requests.post(DISCORD_WEBHOOKS, json=payload)
     print(r.status_code)
 
 def get_killboard_data(threadName, delay, counter):
+
     while counter:
         if exitFlag:
             threadName.exit()
         time.sleep(delay)
 
-        killboard_data = requests.get(KILLBOARD_URL).json()
+        print("Checking....")
+        try:
+            killboard_data = requests.get(KILLBOARD_URL).json()
+        except:
+            print("Error!")
+            killboard_data = {}
         for data in killboard_data:
             if data["Type"] == "KILL" and date_filter in data["TimeStamp"]:
                 print(data["EventId"])
@@ -61,13 +67,13 @@ def get_killboard_data(threadName, delay, counter):
                 # Just be sure any changes have been committed or they will be lost.
                 conn.close()
 
-        print(date_filter)
+        print("Checks Done!")
         time.sleep(delay)
 
     counter -= 1
 
 # Create new threads
-thread1 = myThread(1, "Thread-1", 10)
+thread1 = myThread(1, "Thread-1", 5)
 
 
 # Start new Threads
