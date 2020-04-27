@@ -1,4 +1,5 @@
 from datetime import datetime
+from random import randrange
 import requests
 import threading
 import time
@@ -6,7 +7,7 @@ import sqlite3
 
 GUILD_ID = "0rk05r3DRkOSqAV5m_IUWQ"
 GUILD_NAME = "KNIGHTS OF TOMO"
-KILLBOARD_URL = "https://gameinfo.albiononline.com/api/gameinfo/guilds/" +GUILD_ID +"/top?limit=50&range=week"
+KILLBOARD_URL = "https://gameinfo.albiononline.com/api/gameinfo/guilds/" +GUILD_ID +"/top?limit=5&range=week"
 DISCORD_WEBHOOKS = "https://discordapp.com/api/webhooks/704237220038705162/XtsJndaxurQyC1YPuJQY8jMlOKkcFEMJ6qv2MQ1jYrEmFMwS1KrxgaoiaaiYjbzLzvNS"
 exitFlag = 0
 date_filter = datetime.now().strftime("%Y-%m-%d")
@@ -25,12 +26,45 @@ class myThread (threading.Thread):
       print ("Exiting " + self.name)
 
 def send_to_discord(data):
-    payload = {
-        "content": data["Killer"]["Name"] +" killed " +data["Victim"]["Name"] +" [" +data["Victim"]["GuildName"] + "]"
-    }
+    # payload = {
+    #     "content": data["Killer"]["Name"] +" killed " +data["Victim"]["Name"] +" [" +data["Victim"]["GuildName"] + "]"
+    # }
+    colors = ["16711680", "6724044", "16773120"]
+    if data["Victim"]["AllianceName"] == "":
+        data["Victim"]["AllianceName"] = "None"
+    embeds = [{
+            "title": data["Killer"]["Name"] +" Killed " +data["Victim"]["Name"],
+            "color": colors[randrange(len(colors)-1)]
+            },
+            {
+            "fields": [
+                {
+                    "name": "Guild",
+                    "value": data["Victim"]["GuildName"],
+                    "inline": True
+                },
+                {
+                    "name": "Alliance",
+                    "value": data["Victim"]["AllianceName"],
+                    "inline": True
+                },
+                {
+                    "name": "Kill Fame",
+                    "value": str(data["Killer"]["KillFame"])
+                }
+                ]
+                },{
+                "timestamp": data["TimeStamp"]
+            }
+        ]
     time.sleep(5)
+    payload = {
+        "embeds": embeds
+    }
+    print(payload)
     r = requests.post(DISCORD_WEBHOOKS, json=payload)
     print(r.status_code)
+    print(r.text)
 
 def get_killboard_data(threadName, delay, counter):
 
@@ -52,7 +86,7 @@ def get_killboard_data(threadName, delay, counter):
                 # Check if exists
                 cur.execute("SELECT id FROM events WHERE id='" +str(data["EventId"]) +"'")
                 rows = cur.fetchall()
-                if len(rows) >= 1:
+                if len(rows) >= 10:
                     continue
                 else:
                     print("-----------------------------")
@@ -77,7 +111,7 @@ def get_killboard_data(threadName, delay, counter):
         counter += 1
 
 # Create new threads
-thread1 = myThread(1, "Thread-1", 60)
+thread1 = myThread(1, "Thread-1", 5)
 
 
 # Start new Threads
