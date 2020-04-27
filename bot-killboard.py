@@ -40,11 +40,11 @@ def get_killboard_data(threadName, delay, counter):
         time.sleep(delay)
 
         print("Checking....")
-        # try:
-        killboard_data = requests.get(KILLBOARD_URL).json()
-        # except:
-        #     print("Error!")
-        #     killboard_data = {}
+        try:
+            killboard_data = requests.get(KILLBOARD_URL).json()
+        except:
+            print("Error!")
+            killboard_data = {}
         for data in killboard_data:
             if data["Type"] == "KILL":
                 print("-----------------------------")
