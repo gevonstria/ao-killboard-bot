@@ -47,12 +47,6 @@ def get_killboard_data(threadName, delay, counter):
             killboard_data = {}
         for data in killboard_data:
             if data["Type"] == "KILL":
-                print("-----------------------------")
-                print(data["EventId"])
-                print(data["Killer"]["Name"])
-                print(data["Victim"]["Name"])
-                print(data["Victim"]["GuildName"])
-                print("-----------------------------")
                 conn = sqlite3.connect('kills_db')
                 cur = conn.cursor()
                 # Check if exists
@@ -62,6 +56,12 @@ def get_killboard_data(threadName, delay, counter):
                     print("Exist")
                     continue
                 else:
+                    print("-----------------------------")
+                    print(data["EventId"])
+                    print(data["Killer"]["Name"])
+                    print(data["Victim"]["Name"])
+                    print(data["Victim"]["GuildName"])
+                    print("-----------------------------")
                     print("Sending to DISCORD_WEBHOOKS")
                     send_to_discord(data)
                     # Insert a row of data
