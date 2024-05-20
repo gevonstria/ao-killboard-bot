@@ -5,10 +5,12 @@ import threading
 import time
 import sqlite3
 
-GUILD_ID = "0rk05r3DRkOSqAV5m_IUWQ"
-GUILD_NAME = "KNIGHTS OF TOMO"
-KILLBOARD_URL = "https://gameinfo.albiononline.com/api/gameinfo/guilds/" +GUILD_ID +"/top?limit=100&range=week"
-DISCORD_WEBHOOKS = "https://discordapp.com/api/webhooks/704237220038705162/XtsJndaxurQyC1YPuJQY8jMlOKkcFEMJ6qv2MQ1jYrEmFMwS1KrxgaoiaaiYjbzLzvNS"
+
+
+GUILD_ID = "iVUjJfmdSzmi_UQGs-LWVA"
+GUILD_NAME = "Rampaging Bulls"
+KILLBOARD_URL = "https://gameinfo-sgp.albiononline.com/api/gameinfo/guilds/" +GUILD_ID +"/top?limit=10&range=week"
+DISCORD_WEBHOOKS = "https://discord.com/api/webhooks/1241894234521604136/G7D4kIMxbDL0rdcN_AQRdUJeDQT2gy-5qti6Kdgxu7fBZ2q0F4nDtMFJCTBshhZXkWRc"
 KILLBOARD_LINK = "https://albiononline.com/en/killboard/kill/"
 exitFlag = 0
 date_filter = datetime.now().strftime("%Y-%m-%d")
@@ -30,14 +32,13 @@ def send_to_discord(data):
     # payload = {
     #     "content": data["Killer"]["Name"] +" killed " +data["Victim"]["Name"] +" [" +data["Victim"]["GuildName"] + "]"
     # }
-    colors = ["16711680", "6724044", "16773120"]
+    colors = [16711680, 6724044, 16773120]
     if data["Victim"]["AllianceName"] == "":
         data["Victim"]["AllianceName"] = "None"
     embeds = [{
             "title": data["Killer"]["Name"] +" Killed " +data["Victim"]["Name"],
-            "color": colors[randrange(len(colors)-1)]
-            },
-            {
+            "color": colors[randrange(len(colors)-1)],
+            "timestamp": data["TimeStamp"],
             "fields": [
                 {
                     "name": "Guild",
@@ -52,16 +53,12 @@ def send_to_discord(data):
                 {
                     "name": "Kill Fame",
                     "value": str(data["Killer"]["KillFame"])
-                }
-                ]
-                },{
-                    "title": "Killboard Link",
-                    "url": KILLBOARD_LINK +str(data["EventId"])
                 },
                 {
-                "timestamp": data["TimeStamp"]
-            }
-        ]
+                    "name": "Killboard Link",
+                    "value": KILLBOARD_LINK +str(data["EventId"])
+                }]       
+        }]
     time.sleep(5)
     payload = {
         "content": "Another one bites the dust",
